@@ -1,11 +1,15 @@
-
 import { auth, signOut } from "@/lib/auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { redirect } from "next/navigation"
 
 export default async function Home() {
     const session = await auth()
+
+    if (!session) {
+        redirect("/login");
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">

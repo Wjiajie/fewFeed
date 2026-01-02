@@ -3,16 +3,33 @@ import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 import { D1Adapter } from "@auth/d1-adapter"
 
+import { getCloudflareContext } from "@opennextjs/cloudflare"
+
 // Debugging env vars in production
-console.log("🔍 Checking Env Vars:", {
+console.log("🔍 Checking Env Vars (Pre-Init):", {
   NODE_ENV: process.env.NODE_ENV,
   AUTH_SECRET_LEN: process.env.AUTH_SECRET?.length,
-  HAS_DB: !!(process.env as any).DB,
-  ALL_KEYS: Object.keys(process.env).filter(k => !k.includes('SECRET') && !k.includes('KEY')).join(',')
 });
 
-// In development, we initialize the proxy directly here to ensure bindings are available
-// This avoids issues with next.config.ts context isolation
+// Attempt to populate process.env from Cloudflare context if missing
+// This uses top-level await which is supported in Next.js App Router
+try {
+  const { env } = await getCloudflareContext();
+  if (env && env.AUTH_SECRET) {
+    process.env.AUTH_SECRET = env.AUTH_SECRET;
+    console.log("✅ Injected AUTH_SECRET from Cloudflare Context");
+  }
+  // Inject DB if missing (for API routes)
+  if (env && env.DB && !(process.env as any).DB) {
+    (process.env as any).DB = env.DB;
+    console.log("✅ Injected DB from Cloudflare Context");
+  }
+} catch (e) {
+  // Ignore error in dev/build phase where getCloudflareContext might fail
+  // console.warn("Notice: getCloudflareContext failed (normal during build):", e);
+}
+
+// In development or if context failed, usage standard process.env or loading
 export let db = (process.env as any).DB;
 
 // If db is missing OR it's been mangled into a string "[object Object]" by Next.js env handling
@@ -65,6 +82,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   session: { strategy: "jwt" }, // Use JWT for edge compatibility and performance
+  trustHost: true, // Explicitly trust the host for Cloudflare Workers
   secret: process.env.AUTH_SECRET,
   pages: {
     signIn: '/login', // Custom login page
