@@ -1,0 +1,32 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "fewfeed"
+main = ".open-next/worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Assets configuration for Cloudflare Pages (Unified)
+assets = { directory = ".open-next/assets", binding = "ASSETS" }
+
+[[d1_databases]]
+binding = "DB"
+database_name = "fewfeed-db"
+database_id = "74980ee6-e2a7-4196-8ad2-0fb14384a739"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "fewfeed-content"
+
+[ai]
+binding = "AI"
+
+# [[queues.producers]]
+# queue = "feed-processing-queue"
+# binding = "QUEUE"
+
+# [[queues.consumers]]
+# queue = "feed-processing-queue"
+# max_batch_size = 10
+# max_batch_timeout = 30
+
+[observability]
+enabled = true
