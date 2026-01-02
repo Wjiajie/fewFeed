@@ -15,9 +15,13 @@ console.log("🔍 Checking Env Vars (Pre-Init):", {
 // This uses top-level await which is supported in Next.js App Router
 try {
   const { env } = await getCloudflareContext();
-  if (env && env.AUTH_SECRET) {
-    process.env.AUTH_SECRET = env.AUTH_SECRET;
-    console.log("✅ Injected AUTH_SECRET from Cloudflare Context");
+  if (env) {
+    if (env.AUTH_SECRET) process.env.AUTH_SECRET = env.AUTH_SECRET;
+    if (env.AUTH_GITHUB_ID) process.env.AUTH_GITHUB_ID = env.AUTH_GITHUB_ID;
+    if (env.AUTH_GITHUB_SECRET) process.env.AUTH_GITHUB_SECRET = env.AUTH_GITHUB_SECRET;
+    if (env.AUTH_GOOGLE_ID) process.env.AUTH_GOOGLE_ID = env.AUTH_GOOGLE_ID;
+    if (env.AUTH_GOOGLE_SECRET) process.env.AUTH_GOOGLE_SECRET = env.AUTH_GOOGLE_SECRET;
+    console.log("✅ Injected Auth variables from Cloudflare Context");
   }
   // Inject DB if missing (for API routes)
   if (env && env.DB && !(process.env as any).DB) {
