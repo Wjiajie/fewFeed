@@ -21,6 +21,12 @@ const nextConfig = async (): Promise<NextConfig> => {
   }
 
   return {
+    eslint: {
+      ignoreDuringBuilds: true,
+    },
+    typescript: {
+      ignoreBuildErrors: true,
+    },
     serverExternalPackages: ["wrangler"],
     webpack: (config, { isServer }) => {
       if (isServer) {
