@@ -7,7 +7,9 @@ export default async function middleware(req: any) {
     let secret = process.env.AUTH_SECRET;
     try {
         const { env } = await getCloudflareContext();
+        // @ts-ignore
         if (env.AUTH_SECRET) {
+            // @ts-ignore
             secret = env.AUTH_SECRET;
         }
     } catch (e) {
