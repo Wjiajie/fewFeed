@@ -5,8 +5,10 @@ import { getCloudflareContext } from "@opennextjs/cloudflare"
 export default async function middleware(req: any) {
     // Use getCloudflareContext to get runtime env vars
     let secret = process.env.AUTH_SECRET;
+    let env: any = null;
     try {
-        const { env } = await getCloudflareContext();
+        const ctx = await getCloudflareContext();
+        env = ctx.env;
         // @ts-ignore
         if (env.AUTH_SECRET) {
             // @ts-ignore
