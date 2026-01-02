@@ -3,6 +3,14 @@ import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 import { D1Adapter } from "@auth/d1-adapter"
 
+// Debugging env vars in production
+console.log("🔍 Checking Env Vars:", {
+  NODE_ENV: process.env.NODE_ENV,
+  AUTH_SECRET_LEN: process.env.AUTH_SECRET?.length,
+  HAS_DB: !!(process.env as any).DB,
+  ALL_KEYS: Object.keys(process.env).filter(k => !k.includes('SECRET') && !k.includes('KEY')).join(',')
+});
+
 // In development, we initialize the proxy directly here to ensure bindings are available
 // This avoids issues with next.config.ts context isolation
 export let db = (process.env as any).DB;
