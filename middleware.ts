@@ -17,6 +17,7 @@ export default async function middleware(req: any) {
     }
 
     // Check if we have the secret now
+    console.log('🛡️ Mware env keys:', env ? Object.keys(env) : 'env is null');
     console.log('🛡️ Mware env check:', {
         hasSecret: !!secret,
         secretLen: secret?.length
