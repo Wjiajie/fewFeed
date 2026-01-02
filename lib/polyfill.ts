@@ -20,3 +20,5 @@ try {
 } catch (e) {
     console.warn('[Polyfill] Failed to patch setImmediate:', e);
 }
+
+export { }; // Make this a module
