@@ -21,7 +21,16 @@ try {
     if (env.AUTH_GITHUB_SECRET) process.env.AUTH_GITHUB_SECRET = env.AUTH_GITHUB_SECRET;
     if (env.AUTH_GOOGLE_ID) process.env.AUTH_GOOGLE_ID = env.AUTH_GOOGLE_ID;
     if (env.AUTH_GOOGLE_SECRET) process.env.AUTH_GOOGLE_SECRET = env.AUTH_GOOGLE_SECRET;
-    console.log("✅ Injected Auth variables from Cloudflare Context");
+
+    // Inject AUTH_URL and TRUST_HOST
+    if (env.AUTH_URL) process.env.AUTH_URL = env.AUTH_URL;
+    if (env.AUTH_TRUST_HOST) process.env.AUTH_TRUST_HOST = env.AUTH_TRUST_HOST;
+
+    console.log("✅ Injected Auth variables from Cloudflare Context:", {
+      AUTH_URL: process.env.AUTH_URL,
+      AUTH_GITHUB_ID_SET: !!process.env.AUTH_GITHUB_ID,
+      AUTH_SECRET_SET: !!process.env.AUTH_SECRET
+    });
   }
   // Inject DB if missing (for API routes)
   if (env && env.DB && !(process.env as any).DB) {
