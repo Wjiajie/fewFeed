@@ -36,3 +36,10 @@ enabled = true
 head_sampling_rate = 1
 persist = true
 invocation_logs = true
+
+[vars]
+AUTH_URL = "https://few-feed.jiajie-dev.workers.dev"
+AUTH_TRUST_HOST = "true"
+NEXT_PUBLIC_SITE_URL = "https://few-feed.jiajie-dev.workers.dev"
+AUTH_GITHUB_ID = "Ov23liRVXORFRG9u0N7F" 
+AUTH_GOOGLE_ID = "820121304214-trjj59f0oflff7cu4juno8986t8nlue1.apps.googleusercontent.com"
