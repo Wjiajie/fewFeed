@@ -22,7 +22,17 @@ const nextConfig = async (): Promise<NextConfig> => {
 
   return {
     serverExternalPackages: ["wrangler"],
-    /* config options here */
+    webpack: (config, { isServer }) => {
+      if (isServer) {
+        // Fix for "Cannot assign to read only property 'setImmediate'" in Next.js 16 + OpenNext
+        // effectively prevents Next.js from trying to polyfill it itself
+        config.resolve.alias = {
+          ...config.resolve.alias,
+          "next/dist/server/node-environment-extensions/fast-set-immediate.external.js": false,
+        };
+      }
+      return config;
+    },
   };
 };
 
