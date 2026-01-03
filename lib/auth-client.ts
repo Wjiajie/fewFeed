@@ -1,0 +1,10 @@
+import { createAuthClient } from "better-auth/react"
+import { adminClient } from "better-auth/client/plugins"
+
+export const authClient = createAuthClient({
+    // baseURL is automatically inferred in browser but good to be explicit for SSR/Edge if needed
+    baseURL: process.env.NEXT_PUBLIC_SITE_URL,
+    plugins: [
+        adminClient()
+    ]
+})

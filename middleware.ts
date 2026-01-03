@@ -1,37 +1,11 @@
-import NextAuth from "next-auth"
-import { authConfig } from "./lib/auth.config"
-import { getCloudflareContext } from "@opennextjs/cloudflare"
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export default async function middleware(req: any) {
-    // Use getCloudflareContext to get runtime env vars
-    let secret = process.env.AUTH_SECRET;
-    let env: any = null;
-    try {
-        const ctx = await getCloudflareContext();
-        env = ctx.env;
-        // @ts-ignore
-        if (env.AUTH_SECRET) {
-            // @ts-ignore
-            secret = env.AUTH_SECRET;
-        }
-    } catch (e) {
-        console.warn("Failed to get Cloudflare context:", e);
-    }
-
-    // Check if we have the secret now
-    console.log('🛡️ Mware env keys:', env ? Object.keys(env) : 'env is null');
-    console.log('🛡️ Mware env check:', {
-        hasSecret: !!secret,
-        secretLen: secret?.length
-    });
-
-    // Manually invoke NextAuth with the injected secret
-    const config = {
-        ...authConfig,
-        secret: secret || process.env.AUTH_SECRET // Fallback
-    };
-
-    return NextAuth(config).auth(req);
+export default async function middleware(req: NextRequest) {
+    // Middleware for Better-Auth access control.
+    // For now, allowing all requests to proceed.
+    // Implement specific route protection here or via layout checks.
+    return NextResponse.next();
 }
 
 export const config = {

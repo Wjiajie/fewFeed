@@ -1,11 +1,14 @@
-import { auth, signOut } from "@/lib/auth"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { redirect } from "next/navigation"
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { redirect } from "next/navigation";
+import { SignOutButton } from "@/components/sign-out-button";
 
 export default async function Home() {
-    const session = await auth()
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
 
     if (!session) {
         redirect("/login");
@@ -19,10 +22,10 @@ export default async function Home() {
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                             <Avatar>
-                                <AvatarImage src={session?.user?.image || ""} />
-                                <AvatarFallback>{session?.user?.name?.[0]}</AvatarFallback>
+                                <AvatarImage src={session.user.image || ""} />
+                                <AvatarFallback>{session.user.name.charAt(0)}</AvatarFallback>
                             </Avatar>
-                            <span className="font-medium">{session?.user?.name}</span>
+                            <span className="font-medium">{session.user.name}</span>
                         </div>
                     </div>
                 </CardHeader>
@@ -34,15 +37,7 @@ export default async function Home() {
                             <p className="text-green-700">✅ Auth System Ready</p>
                         </div>
 
-                        <form
-                            action={async () => {
-                                "use server"
-                                console.log("🚪 Signing out...")
-                                await signOut({ redirectTo: "/login" })
-                            }}
-                        >
-                            <Button variant="destructive">Sign Out</Button>
-                        </form>
+                        <SignOutButton />
                     </div>
                 </CardContent>
             </Card>
